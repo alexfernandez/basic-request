@@ -20,7 +20,7 @@ var testing = require('testing');
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
-exports.request = function(url, callback)
+exports.get = function(url, callback)
 {
 	var finished = false;
 	var protocol = http;
@@ -35,7 +35,7 @@ exports.request = function(url, callback)
 			// follow redirection
 			var location = response.headers.location;
 			request.abort();
-			return exports.request(location, callback);
+			return exports.get(location, callback);
 		}
 		if (response.statusCode != 200)
 		{
@@ -71,11 +71,11 @@ exports.request = function(url, callback)
  */
 function testRequest(callback)
 {
-	exports.request('http://www.google.com/', function(error, result)
+	exports.get('http://www.google.com/', function(error, result)
 	{
 		testing.check(error, 'Could not access Google', callback);
 		testing.assert(result.contains('Google'), 'Invalid contents for Google page', callback);
-		exports.request('http://www.google.com/fake_page', function(error)
+		exports.get('http://www.google.com/fake_page', function(error)
 		{
 			testing.assert(error, 'Could access fake page', callback);
 			testing.success(callback);
