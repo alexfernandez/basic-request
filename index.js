@@ -9,6 +9,7 @@
 require('prototypes');
 var http = require('http');
 var https = require('https');
+var urlLib = require('url');
 
 
 /**
@@ -27,7 +28,11 @@ exports.get = function(url, callback)
 	{
 		protocol = https;
 	}
-	var request = protocol.get(url, function(response)
+	var options = urlLib.parse(url);
+	options.headers = {
+		'user-agent': 'node.js basic-request bot',
+	};
+	var request = protocol.get(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
 		{
