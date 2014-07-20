@@ -15,7 +15,7 @@ var https = require('https');
  * Access a URL, send to callback. Parameters:
  *	- url: the URL to access.
  *	- callback(error, body): error is null only if result is 200.
- *		error can contain the following attributes:
+ *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
@@ -40,7 +40,7 @@ exports.get = function(url, callback)
 		{
 			finished = true;
 			request.abort();
-			return callback('Invalid status code ' + response.statusCode, {statusCode: true});
+			return callback('Invalid status code ' + response.statusCode, {statusCode: response.statusCode});
 		}
 		var body = '';
 		response.on('data', function (chunk)
