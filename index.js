@@ -28,17 +28,19 @@ exports.request = function(url, callback)
 	{
 		protocol = https;
 	}
-	protocol.get(url, function(response)
+	var request = protocol.get(url, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
 		{
 			// follow redirection
 			var location = response.headers.location;
+			request.abort();
 			return exports.request(location, callback);
 		}
 		if (response.statusCode != 200)
 		{
 			finished = true;
+			request.abort();
 			return callback('Invalid status code ' + response.statusCode, {statusCode: true});
 		}
 		var body = '';
@@ -57,6 +59,7 @@ exports.request = function(url, callback)
 			{
 				return;
 			}
+			request.end();
 			return callback(null, body);
 		});
 	}); 
