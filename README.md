@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/alexfernandez/basic-request.png)](http://travis-ci.org/alexfernandez/basic-request)
+
 # basic-request
 
 A very basic library to request a URL and get a result.
