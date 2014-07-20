@@ -1,0 +1,26 @@
+{
+	"name": "simple-request",
+	"version": "0.0.1",
+	"description": "Simple request to a URL, send to a function(error, body).",
+	"homepage": "https://github.com/alexfernandez/simple-request",
+	"contributors": ["Alex Fernández <alexfernandeznpm@gmail.com>"],
+	"license": "MIT",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexfernandez/simple-request"
+	},
+	"dependencies": {
+		"prototypes": "*",
+		"testing": "*"
+	},
+	"keywords" : ["request", "URL", "simple", "no-frills"],
+	"engines": {
+		"node": "*"
+	},
+	"preferGlobal": false,
+	"scripts": {
+		"test": "node test.js"
+	},
+	"private": false
+}
