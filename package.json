@@ -1,6 +1,6 @@
 {
 	"name": "basic-request",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Basic request to a URL, send to a function(error, body). Follows redirects.",
 	"homepage": "https://github.com/alexfernandez/basic-request",
 	"contributors": ["Alex Fernández <alexfernandeznpm@gmail.com>"],
@@ -11,7 +11,9 @@
 		"url": "https://github.com/alexfernandez/basic-request"
 	},
 	"dependencies": {
-		"prototypes": "*",
+		"prototypes": "*"
+	},
+	"devDependencies": {
 		"testing": "*"
 	},
 	"keywords" : ["request", "URL", "simple", "basic", "no-frills"],
