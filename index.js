@@ -66,8 +66,12 @@ exports.get = function(url, callback)
 			request.end();
 			return callback(null, body);
 		});
-	}); 
-
+	});
+	request.on('error', function(error)
+	{
+		finished = true;
+		return callback('Error sending request: ' + error, {sendingRequest: true});
+	});
 };
 
 // run tests if invoked directly

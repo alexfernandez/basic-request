@@ -22,7 +22,11 @@ function testRequest(callback)
 		request.get('http://www.google.com/fake_page', function(error)
 		{
 			testing.assert(error, 'Could access fake page', callback);
-			testing.success(callback);
+			request.get('http://askdjfsjljwer.soiueiruouoisfoisdo.reuioweiwr/', function(error)
+			{
+				testing.assert(error, 'Could access fake domain', callback);
+				testing.success(callback);
+			});
 		});
 	});
 }
@@ -32,7 +36,7 @@ function testRequest(callback)
  */
 exports.test = function(callback)
 {
-	testing.run([testRequest], 4200, callback);
+	testing.run([testRequest], 60000, callback);
 };
 
 // run tests if invoked directly
