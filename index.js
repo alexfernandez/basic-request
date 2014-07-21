@@ -22,13 +22,41 @@ var urlLib = require('url');
  */
 exports.get = function(url, callback)
 {
+	var options = urlLib.parse(url);
+	var request = send(options, callback);
+	request.close();
+};
+
+/**
+ * Post to a URL, send to callback. Parameters:
+ *	- url: the URL to access.
+ *	- json: the object to send, can be a JSON string.
+ *	- callback(error, body): error is null only if result is 200.
+ *		If there is an error, the body can contain the following attributes:
+ *		- statusCode: if status code is not 200.
+ *		- readingResponse: if response could not be read.
+ */
+exports.post = function(url, json, callback)
+{
+	var options = urlLib.parse(url);
+	options.method = 'POST';
+	var request = send(options, callback);
+	if (typeof json == 'object')
+	{
+		json = JSON.stringify(json);
+	}
+	request.write(json);
+	request.close();
+};
+
+function send(options, callback)
+{
 	var finished = false;
 	var protocol = http;
-	if (url.startsWith('https'))
+	if (options.protocol == 'https')
 	{
 		protocol = https;
 	}
-	var options = urlLib.parse(url);
 	options.headers = {
 		'user-agent': 'node.js basic-request bot',
 	};
@@ -72,7 +100,7 @@ exports.get = function(url, callback)
 		finished = true;
 		return callback('Error sending request: ' + error, {sendingRequest: true});
 	});
-};
+}
 
 // run tests if invoked directly
 if (__filename == process.argv[1])
