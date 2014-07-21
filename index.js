@@ -43,6 +43,15 @@ exports.post = function(url, json, callback)
 	if (typeof json == 'object')
 	{
 		json = JSON.stringify(json);
+		options.headers = {
+			'Content-Type': 'application/json',
+		};
+	}
+	else
+	{
+		options.headers = {
+			'Content-Type': 'text/plain',
+		};
 	}
 	request.write(json);
 	request.end();
@@ -56,9 +65,8 @@ function send(options, callback)
 	{
 		protocol = https;
 	}
-	options.headers = {
-		'user-agent': 'node.js basic-request bot',
-	};
+	options.headers = options.headers || {};
+	options.headers['user-agent'] = 'node.js basic-request bot';
 	var request = protocol.get(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
