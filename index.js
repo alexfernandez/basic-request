@@ -24,7 +24,7 @@ exports.get = function(url, callback)
 {
 	var options = urlLib.parse(url);
 	var request = send(options, callback);
-	request.close();
+	request.end();
 };
 
 /**
@@ -46,7 +46,7 @@ exports.post = function(url, json, callback)
 		json = JSON.stringify(json);
 	}
 	request.write(json);
-	request.close();
+	request.end();
 };
 
 function send(options, callback)
@@ -100,6 +100,7 @@ function send(options, callback)
 		finished = true;
 		return callback('Error sending request: ' + error, {sendingRequest: true});
 	});
+	return request;
 }
 
 // run tests if invoked directly
