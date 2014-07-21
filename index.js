@@ -52,7 +52,7 @@ function send(options, callback)
 {
 	var finished = false;
 	var protocol = http;
-	if (options.protocol == 'https')
+	if (options.protocol == 'https:')
 	{
 		protocol = https;
 	}
