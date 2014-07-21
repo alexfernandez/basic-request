@@ -6,7 +6,6 @@
  */
 
 // requires
-require('prototypes');
 var http = require('http');
 var https = require('https');
 var urlLib = require('url');

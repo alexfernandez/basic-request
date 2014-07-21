@@ -10,9 +10,7 @@
 		"type": "git",
 		"url": "https://github.com/alexfernandez/basic-request"
 	},
-	"dependencies": {
-		"prototypes": "*"
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"testing": "*"
 	},
