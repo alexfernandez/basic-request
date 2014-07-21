@@ -35,11 +35,11 @@ function testGet(callback)
 function testPost(callback)
 {
 	var json = {scopes: ['public_repo']};
-	request.post('https://api.github.com/authorizations', json, function(error, result)
+	request.post('https://www.google.com/', json, function(error, result)
 	{
-		testing.assert(error, 'Should not post to GitHub', callback);
+		testing.assert(error, 'Should not post to Google', callback);
 		testing.assert(result, 'Should have returned something', callback);
-		testing.assertEquals(result.statusCode, 401, 'Should not be authorized', callback);
+		testing.assertEquals(result.statusCode, 405, 'Should not be allowed', callback);
 		testing.success(callback);
 	});
 }
