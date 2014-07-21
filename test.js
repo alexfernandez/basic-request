@@ -6,14 +6,15 @@
  */
 
 // requires
+require('prototypes');
 var testing = require('testing');
 var request = require('./index.js');
 
 
 /**
- * Test the request.
+ * Test get.
  */
-function testRequest(callback)
+function testGet(callback)
 {
 	request.get('http://www.google.com/', function(error, result)
 	{
@@ -31,12 +32,27 @@ function testRequest(callback)
 	});
 }
 
+function testPost(callback)
+{
+	var json = {scopes: ['public_repo']};
+	request.post('https://api.github.com/authorizations', json, function(error, result)
+	{
+		testing.assert(error, 'Should not post to GitHub', callback);
+		testing.assert(result, 'Should have returned something', callback);
+		testing.assertEquals(result.statusCode, 401, 'Should not be authorized', callback);
+		testing.success(callback);
+	});
+}
+
 /**
  * Run all module tests.
  */
 exports.test = function(callback)
 {
-	testing.run([testRequest], 60000, callback);
+	testing.run([
+		testGet,
+		testPost,
+	], 60000, callback);
 };
 
 // run tests if invoked directly
