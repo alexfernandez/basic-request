@@ -21,6 +21,7 @@ var urlLib = require('url');
  */
 exports.get = function(url, callback)
 {
+	callback = callback || function() {};
 	var options = urlLib.parse(url);
 	var request = send(options, callback);
 	request.end();
@@ -37,6 +38,7 @@ exports.get = function(url, callback)
  */
 exports.post = function(url, json, callback)
 {
+	callback = callback || function() {};
 	var options = urlLib.parse(url);
 	options.method = 'POST';
 	var request = send(options, callback);
