@@ -34,7 +34,7 @@ and then use `get()` with a callback in the traditional node.js fashion:
     });
 
 That is it! No wading through responses, parsing status codes or anything else;
-basic-response will do that for you. It evern follows redirects!
+basic-response will do that for you. It even follows redirects!
 
 You can see a couple of examples in [the test file](https://github.com/alexfernandez/basic-request/blob/master/test.js).
 
