@@ -41,20 +41,22 @@ exports.post = function(url, json, callback)
 	callback = callback || function() {};
 	var options = urlLib.parse(url);
 	options.method = 'POST';
-	var request = send(options, callback);
 	if (typeof json == 'object')
 	{
 		json = JSON.stringify(json);
 		options.headers = {
 			'Content-Type': 'application/json',
+			'Content-Length': json.length,
 		};
 	}
 	else
 	{
 		options.headers = {
 			'Content-Type': 'text/plain',
+			'Content-Length': json.length,
 		};
 	}
+	var request = send(options, callback);
 	request.write(json);
 	request.end();
 };
