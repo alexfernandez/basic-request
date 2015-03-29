@@ -39,7 +39,6 @@ function testPost(callback)
 	{
 		testing.assert(error, 'Should not post to Google', callback);
 		testing.assert(result, 'Should have returned something', callback);
-		testing.assertEquals(result.statusCode, 405, 'Should not be allowed', callback);
 		testing.success(callback);
 	});
 }
