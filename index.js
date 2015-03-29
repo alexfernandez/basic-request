@@ -9,15 +9,6 @@
 var http = require('http');
 var https = require('https');
 var urlLib = require('url');
-var Agent = require('agentkeepalive');
-
-// globals
-var agent = new Agent({
-	maxSockets: 100,
-	maxFreeSockets: 10,
-	timeout: 10000,
-	keepAliveTimeout: 10000,
-});
 
 
 /**
@@ -80,7 +71,7 @@ function send(options, callback)
 	}
 	options.headers = options.headers || {};
 	options.headers['user-agent'] = 'node.js basic-request bot';
-	options.agent = agent;
+	options.agent = null;
 	var request = protocol.get(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)

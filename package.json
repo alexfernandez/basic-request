@@ -10,9 +10,7 @@
 		"type": "git",
 		"url": "https://github.com/alexfernandez/basic-request"
 	},
-	"dependencies": {
-		"agentkeepalive": "^0.2.3"
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"prototypes": "*",
 		"testing": "*"
