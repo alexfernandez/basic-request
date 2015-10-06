@@ -59,7 +59,7 @@ exports.post = function(url, json, params, callback)
 		params.body = JSON.stringify(json);
 		options.headers = {
 			'Content-Type': 'application/json',
-			'Content-Length': json.length,
+			'Content-Length': options.body.length,
 		};
 	}
 	else
@@ -67,7 +67,7 @@ exports.post = function(url, json, params, callback)
 		params.body = json;
 		options.headers = {
 			'Content-Type': 'text/plain',
-			'Content-Length': json.length,
+			'Content-Length': options.body.length,
 		};
 	}
 	send(options, params, callback);
