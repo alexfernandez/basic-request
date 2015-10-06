@@ -183,7 +183,7 @@ function sendWithRetries(retries, options, params, callback)
 			return callback(null, body);
 		});
 	});
-	//request.setNoDelay();
+	request.setNoDelay();
 	request.setTimeout(params.timeout || 0, function()
 	{
 		if (finished)
