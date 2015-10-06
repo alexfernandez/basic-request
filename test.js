@@ -13,11 +13,11 @@ var request = require('./index.js');
 
 function testGet(callback)
 {
-	request.get('http://www.google.com/', function(error, result)
+	request.get('http://httpbin.org/', function(error, result)
 	{
-		testing.check(error, 'Could not access Google', callback);
-		testing.assert(result.contains('Google'), 'Invalid contents for Google page', callback);
-		request.get('http://www.google.com/fake_page', function(error)
+		testing.check(error, 'Could not access httpbin', callback);
+		testing.assert(result.contains('httpbin'), 'Invalid contents for httpbin page', callback);
+		request.get('http://httpbin.org/fake_page', function(error)
 		{
 			testing.assert(error, 'Could access fake page', callback);
 			request.get('http://askdjfsjljwer.soiueiruouoisfoisdo.reuioweiwr/', function(error)
@@ -42,9 +42,9 @@ function testGetRetries(callback)
 function testPost(callback)
 {
 	var json = {scopes: ['public_repo']};
-	request.post('https://www.google.com/', json, function(error, result)
+	request.post('https://httpbin.org/post', json, function(error, result)
 	{
-		testing.assert(error, 'Should not post to Google', callback);
+		testing.check(error, 'Should post to httpbin', callback);
 		testing.assert(result, 'Should have returned something', callback);
 		testing.success(callback);
 	});
