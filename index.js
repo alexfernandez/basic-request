@@ -22,16 +22,9 @@ var urlLib = require('url');
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
-exports.get = function(url, params, callback)
+exports.get = function(url, params, json, callback)
 {
-	if (typeof params == 'function')
-	{
-		callback = params;
-		params = {};
-	}
-	params = params || {};
-	var options = urlLib.parse(url);
-	send(options, params, callback);
+	send(url, 'GET', params, json, callback);
 };
 
 /**
@@ -48,9 +41,7 @@ exports.get = function(url, params, callback)
  */
 exports.post = function(url, json, params, callback)
 {
-	var options = urlLib.parse(url);
-	options.method = 'POST';
-	sendBody(options, json, params, callback);
+	send(url, 'POST', params, json, callback);
 };
 
 /**
@@ -67,19 +58,25 @@ exports.post = function(url, json, params, callback)
  */
 exports.put = function(url, json, params, callback)
 {
-	var options = urlLib.parse(url);
-	options.method = 'PUT';
-	sendBody(options, json, params, callback);
+	send(url, 'PUT', json, params, callback);
 };
 
-function sendBody(options, json, params, callback)
+function send(url, method, json, params, callback)
 {
 	if (typeof params == 'function')
 	{
 		callback = params;
 		params = {};
 	}
-	params = params || {};
+	else if (typeof json == 'function')
+	{
+		callback = json;
+		params = {};
+		json = null;
+	}
+	callback = callback || function() {};
+	var options = urlLib.parse(url);
+	options.method = method;
 	if (typeof json == 'object')
 	{
 		params.body = JSON.stringify(json);
@@ -88,7 +85,7 @@ function sendBody(options, json, params, callback)
 			'Content-Length': params.body.length,
 		};
 	}
-	else
+	else if (json)
 	{
 		params.body = json;
 		options.headers = {
@@ -96,13 +93,10 @@ function sendBody(options, json, params, callback)
 			'Content-Length': params.body.length,
 		};
 	}
-	send(options, params, callback);
-}
-
-function send(options, params, callback)
-{
-	callback = callback || function() {};
-	options.headers = options.headers || {};
+	else
+	{
+		options.headers = {};
+	}
 	options.headers['user-agent'] = 'node.js basic-request bot';
 	options.agent = null;
 	sendWithRetries(params.retries, options, params, callback);
@@ -189,7 +183,7 @@ function sendWithRetries(retries, options, params, callback)
 			return callback(null, body);
 		});
 	});
-	request.setNoDelay();
+	//request.setNoDelay();
 	request.setTimeout(params.timeout || 0, function()
 	{
 		if (finished)
@@ -218,8 +212,9 @@ function sendWithRetries(retries, options, params, callback)
 	});
 	if (params.body)
 	{
-		request.write(params.body);
+		request.write(params.body, 'utf8');
 	}
+	request.end();
 }
 
 // show API if invoked directly
