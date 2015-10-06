@@ -11,9 +11,6 @@ var testing = require('testing');
 var request = require('./index.js');
 
 
-/**
- * Test get.
- */
 function testGet(callback)
 {
 	request.get('http://www.google.com/', function(error, result)
@@ -29,6 +26,16 @@ function testGet(callback)
 				testing.success(callback);
 			});
 		});
+	});
+}
+
+function testGetRetries(callback)
+{
+	var params = {retries: 3};
+	request.get('https://qeriouosdfs.qruiojojsdlksfjl.ciouior/', params, function(error)
+	{
+		testing.assert(error, 'Should not access fake domain with retries', callback);
+		testing.success(callback);
 	});
 }
 
@@ -51,6 +58,7 @@ exports.test = function(callback)
 {
 	testing.run([
 		testGet,
+		testGetRetries,
 		testPost,
 	], 60000, callback);
 };
