@@ -40,6 +40,10 @@ You can see a couple of examples in [the test file](https://github.com/alexferna
 
 ## *BLOAT ALERT*
 
+A couple of additional features have crept in.
+
+### Retries
+
 The basic-request package now supports retries:
 
     request.get('http://www.google.com/', {retries: 2}, function(error, body) {
@@ -49,6 +53,21 @@ The basic-request package now supports retries:
         }
         console.log('Received %s', body);
     });
+
+### PUT and POST
+
+The basic-request package now supports PUT and POST methods,
+and will even stringify objects into JSON for you:
+
+    request.post('http://www.google.com/', {attribute: 'value'}, function(error, body) {
+        if (error) {
+            console.error('Could not access Google with POST: %s', error);
+            return;
+        }
+        console.log('Received %s', body);
+    });
+
+and likewise with `request.put()`.
 
 ## License
 
