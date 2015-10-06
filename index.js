@@ -46,14 +46,19 @@ exports.get = function(url, params, callback)
  */
 exports.post = function(url, json, params, callback)
 {
+	var options = urlLib.parse(url);
+	options.method = 'POST';
+	sendBody(options, json, params, callback);
+};
+
+function sendBody(options, json, params, callback)
+{
 	if (typeof params == 'function')
 	{
 		callback = params;
 		params = {};
 	}
 	params = params || {};
-	var options = urlLib.parse(url);
-	options.method = 'POST';
 	if (typeof json == 'object')
 	{
 		params.body = JSON.stringify(json);
@@ -71,7 +76,7 @@ exports.post = function(url, json, params, callback)
 		};
 	}
 	send(options, params, callback);
-};
+}
 
 function send(options, params, callback)
 {
