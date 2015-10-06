@@ -14,36 +14,49 @@ var urlLib = require('url');
 /**
  * Access a URL, send to callback. Parameters:
  *	- url: the URL to access.
+ *	- params: optional additional parameters, currently supported:
+ *		- retries: number of times to retry in case of error, default none.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
-exports.get = function(url, callback)
+exports.get = function(url, params, callback)
 {
-	callback = callback || function() {};
+	if (typeof params == 'function')
+	{
+		callback = params;
+		params = {};
+	}
+	params = params || {};
 	var options = urlLib.parse(url);
-	var request = send(options, callback);
-	request.end();
+	send(options, params, callback);
 };
 
 /**
  * Post to a URL, send to callback. Parameters:
  *	- url: the URL to access.
  *	- json: the object to send, can be a JSON string.
+ *	- params: optional additional parameters, currently supported:
+ *		- retries: number of times to retry in case of error, default none.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
-exports.post = function(url, json, callback)
+exports.post = function(url, json, params, callback)
 {
-	callback = callback || function() {};
+	if (typeof params == 'function')
+	{
+		callback = params;
+		params = {};
+	}
+	params = params || {};
 	var options = urlLib.parse(url);
 	options.method = 'POST';
 	if (typeof json == 'object')
 	{
-		json = JSON.stringify(json);
+		params.body = JSON.stringify(json);
 		options.headers = {
 			'Content-Type': 'application/json',
 			'Content-Length': json.length,
@@ -51,17 +64,25 @@ exports.post = function(url, json, callback)
 	}
 	else
 	{
+		params.body = json;
 		options.headers = {
 			'Content-Type': 'text/plain',
 			'Content-Length': json.length,
 		};
 	}
-	var request = send(options, callback);
-	request.write(json);
-	request.end();
+	send(options, params, callback);
 };
 
-function send(options, callback)
+function send(options, params, callback)
+{
+	callback = callback || function() {};
+	options.headers = options.headers || {};
+	options.headers['user-agent'] = 'node.js basic-request bot';
+	options.agent = null;
+	sendWithRetries(params.retries, options, params, callback);
+}
+
+function sendWithRetries(retries, options, params, callback)
 {
 	var finished = false;
 	var protocol = http;
@@ -69,9 +90,6 @@ function send(options, callback)
 	{
 		protocol = https;
 	}
-	options.headers = options.headers || {};
-	options.headers['user-agent'] = 'node.js basic-request bot';
-	options.agent = null;
 	var request = protocol.get(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
@@ -112,10 +130,14 @@ function send(options, callback)
 		finished = true;
 		return callback('Error sending request: ' + error, {sendingRequest: true});
 	});
-	return request;
+	if (params.body)
+	{
+		request.write(params.body);
+	}
+	request.end();
 }
 
-// run tests if invoked directly
+// show API if invoked directly
 if (__filename == process.argv[1])
 {
 	console.log('Use in your code as:');
