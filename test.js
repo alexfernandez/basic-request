@@ -46,7 +46,13 @@ function testPost(callback)
 	{
 		testing.check(error, 'Should post to httpbin', callback);
 		testing.assert(result, 'Should have returned something', callback);
-		testing.success(callback);
+		request.post('https://s3.amazonaws.com/', {nothing: true}, function(error, result)
+		{
+			testing.assert(error, 'Should not post to S3', callback);
+			testing.assert(result, 'Should have got a result from S3', callback);
+			testing.assert(result.statusCode >= 400, 'Should have got a 4xx from S3', callback);
+			testing.success(callback);
+		});
 	});
 }
 
