@@ -38,22 +38,6 @@ basic-response will do that for you. It even follows redirects!
 
 You can see a couple of examples in [the test file](https://github.com/alexfernandez/basic-request/blob/master/test.js).
 
-## *BLOAT ALERT*
-
-A couple of additional features have crept in.
-
-### Retries
-
-The basic-request package now supports retries:
-
-    request.get('http://www.google.com/', {retries: 2}, function(error, body) {
-        if (error) {
-            console.error('Could not access Google with retries: %s', error);
-            return;
-        }
-        console.log('Received %s', body);
-    });
-
 ### PUT and POST
 
 The basic-request package now supports PUT and POST methods,
@@ -68,6 +52,36 @@ and will even stringify objects into JSON for you:
     });
 
 and likewise with `request.put()`.
+
+## *BLOAT ALERT*
+
+A couple of additional features have crept in, using a second (optional) parameter `params`:
+
+    request.get(url, params, callback);
+
+### Retries
+
+Pass a `retries` param to retry requests a number of times:
+
+    request.get('http://www.google.com/', {retries: 2}, function(error, body) {
+        if (error) {
+            console.error('Could not access Google with retries: %s', error);
+            return;
+        }
+        console.log('Received %s', body);
+    });
+
+### Timeout
+
+Pass a `timeout` param to abort the query after the given number of milliseconds:
+
+    request.get('http://www.google.com/', {timeout: 1000}, function(error, body) {
+        if (error) {
+            console.error('Could not access Google with retries: %s', error);
+            return;
+        }
+        console.log('Received %s', body);
+    });
 
 ## License
 
