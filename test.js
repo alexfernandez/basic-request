@@ -50,6 +50,17 @@ function testPost(callback)
 	});
 }
 
+function testPut(callback)
+{
+	var json = {scopes: ['public_repo']};
+	request.put('https://httpbin.org/put', json, function(error, result)
+	{
+		testing.check(error, 'Should put to httpbin', callback);
+		testing.assert(result, 'Should have returned something', callback);
+		testing.success(callback);
+	});
+}
+
 /**
  * Run all module tests.
  */
@@ -59,6 +70,7 @@ exports.test = function(callback)
 		testGet,
 		testGetRetries,
 		testPost,
+		testPut,
 	], 60000, callback);
 };
 

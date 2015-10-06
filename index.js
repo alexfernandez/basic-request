@@ -53,6 +53,25 @@ exports.post = function(url, json, params, callback)
 	sendBody(options, json, params, callback);
 };
 
+/**
+ * Put to a URL, send to callback. Parameters:
+ *	- url: the URL to access.
+ *	- json: the object to send, can be a JSON string.
+ *	- params: optional additional parameters, currently supported:
+ *		- retries: number of times to retry in case of error, default none.
+ *		- timeout: time to wait for response in ms.
+ *	- callback(error, body): error is null only if result is 200.
+ *		If there is an error, the body can contain the following attributes:
+ *		- statusCode: if status code is not 200.
+ *		- readingResponse: if response could not be read.
+ */
+exports.put = function(url, json, params, callback)
+{
+	var options = urlLib.parse(url);
+	options.method = 'PUT';
+	sendBody(options, json, params, callback);
+};
+
 function sendBody(options, json, params, callback)
 {
 	if (typeof params == 'function')
