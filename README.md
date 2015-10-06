@@ -25,9 +25,9 @@ In your code just require the package:
 
 and then use `get()` with a callback in the traditional node.js fashion:
 
-    request.get('http://www.google.com/', function(error, body) {
+    request.get('http://httpbin.org/', function(error, body) {
         if (error) {
-            console.error('Could not access Google: %s', error);
+            console.error('Could not access httpbin: %s', error);
             return;
         }
         console.log('Received %s', body);
@@ -43,9 +43,9 @@ You can see a couple of examples in [the test file](https://github.com/alexferna
 The basic-request package now supports PUT and POST methods,
 and will even stringify objects into JSON for you:
 
-    request.post('http://www.google.com/', {attribute: 'value'}, function(error, body) {
+    request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) {
         if (error) {
-            console.error('Could not access Google with POST: %s', error);
+            console.error('Could not access httpbin with POST: %s', error);
             return;
         }
         console.log('Received %s', body);
@@ -63,9 +63,9 @@ A couple of additional features have crept in, using a second (optional) paramet
 
 Pass a `retries` param to retry requests a number of times:
 
-    request.get('http://www.google.com/', {retries: 2}, function(error, body) {
+    request.get('http://httpbin.org/', {retries: 2}, function(error, body) {
         if (error) {
-            console.error('Could not access Google with retries: %s', error);
+            console.error('Could not access httpbin with retries: %s', error);
             return;
         }
         console.log('Received %s', body);
@@ -75,9 +75,9 @@ Pass a `retries` param to retry requests a number of times:
 
 Pass a `timeout` param to abort the query after the given number of milliseconds:
 
-    request.get('http://www.google.com/', {timeout: 1000}, function(error, body) {
+    request.get('http://httpbin.org/', {timeout: 1000}, function(error, body) {
         if (error) {
-            console.error('Could not access Google with retries: %s', error);
+            console.error('Could not access httpbin with retries: %s', error);
             return;
         }
         console.log('Received %s', body);
