@@ -16,6 +16,7 @@ var urlLib = require('url');
  *	- url: the URL to access.
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
+ *		- timeout: time to wait for response in ms.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -39,6 +40,7 @@ exports.get = function(url, params, callback)
  *	- json: the object to send, can be a JSON string.
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
+ *		- timeout: time to wait for response in ms.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -102,12 +104,20 @@ function sendWithRetries(retries, options, params, callback)
 			// follow redirection
 			var location = response.headers.location;
 			request.abort();
-			return exports.get(location, callback);
+			return exports.get(location, params, callback);
 		}
 		if (response.statusCode != 200)
 		{
+			if (finished)
+			{
+				return;
+			}
 			finished = true;
 			request.abort();
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, options, params, callback);
+			}
 			return callback('Invalid status code ' + response.statusCode, {statusCode: response.statusCode});
 		}
 		var body = '';
@@ -117,8 +127,29 @@ function sendWithRetries(retries, options, params, callback)
 		});
 		response.on('error', function(error)
 		{
+			if (finished)
+			{
+				return;
+			}
 			finished = true;
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, options, params, callback);
+			}
 			return callback('Error reading response: ' + error, {readingResponse: true});
+		});
+		response.setTimeout(params.timeout || 0, function()
+		{
+			if (finished)
+			{
+				return;
+			}
+			finished = true;
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, options, params, callback);
+			}
+			return callback('Timeout while reading response', {responseTimeout: true});
 		});
 		response.on('end', function()
 		{
@@ -126,20 +157,50 @@ function sendWithRetries(retries, options, params, callback)
 			{
 				return;
 			}
-			request.end();
+			finished = true;
+			return callback(null, body);
+		});
+		response.on('close', function()
+		{
+			if (finished)
+			{
+				return;
+			}
+			finished = true;
 			return callback(null, body);
 		});
 	});
+	request.setNoDelay();
+	request.setTimeout(params.timeout || 0, function()
+	{
+		if (finished)
+		{
+			return;
+		}
+		finished = true;
+		if (retries)
+		{
+			return sendWithRetries(retries - 1, options, params, callback);
+		}
+		return callback('Timeout while sending request', {requestTimeout: true});
+	});
 	request.on('error', function(error)
 	{
+		if (finished)
+		{
+			return;
+		}
 		finished = true;
+		if (retries)
+		{
+			return sendWithRetries(retries - 1, options, params, callback);
+		}
 		return callback('Error sending request: ' + error, {sendingRequest: true});
 	});
 	if (params.body)
 	{
 		request.write(params.body);
 	}
-	request.end();
 }
 
 // show API if invoked directly
