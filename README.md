@@ -38,6 +38,18 @@ basic-response will do that for you. It even follows redirects!
 
 You can see a couple of examples in [the test file](https://github.com/alexfernandez/basic-request/blob/master/test.js).
 
+## *BLOAT ALERT*
+
+The basic-request package now supports retries:
+
+    request.get('http://www.google.com/', {retries: 2}, function(error, body) {
+        if (error) {
+            console.error('Could not access Google with retries: %s', error);
+            return;
+        }
+        console.log('Received %s', body);
+    });
+
 ## License
 
 (The MIT License)
