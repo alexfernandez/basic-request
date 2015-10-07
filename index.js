@@ -14,6 +14,7 @@ var urlLib = require('url');
 /**
  * Access a URL, send to callback. Parameters:
  *	- url: the URL to access.
+ *	- json: optional contents to send, defaults to nothing.
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
  *		- timeout: time to wait for response in ms.
@@ -24,6 +25,12 @@ var urlLib = require('url');
  */
 exports.get = function(url, json, params, callback)
 {
+	if (typeof params == 'function')
+	{
+		callback = params;
+		params = json;
+		json = null;
+	}
 	send(url, 'GET', json, params, callback);
 };
 
