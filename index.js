@@ -22,9 +22,9 @@ var urlLib = require('url');
  *		- statusCode: if status code is not 200.
  *		- readingResponse: if response could not be read.
  */
-exports.get = function(url, params, json, callback)
+exports.get = function(url, json, params, callback)
 {
-	send(url, 'GET', params, json, callback);
+	send(url, 'GET', json, params, callback);
 };
 
 /**
@@ -41,7 +41,7 @@ exports.get = function(url, params, json, callback)
  */
 exports.post = function(url, json, params, callback)
 {
-	send(url, 'POST', params, json, callback);
+	send(url, 'POST', json, params, callback);
 };
 
 /**
