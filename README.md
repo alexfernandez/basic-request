@@ -64,11 +64,7 @@ A couple of additional features have crept in, using a second (optional) paramet
 Pass a `retries` param to retry requests a number of times:
 
     request.get('http://httpbin.org/', {retries: 2}, function(error, body) {
-        if (error) {
-            console.error('Could not access httpbin with retries: %s', error);
-            return;
-        }
-        console.log('Received %s', body);
+        [...]
     });
 
 ### Timeout
@@ -76,11 +72,18 @@ Pass a `retries` param to retry requests a number of times:
 Pass a `timeout` param to abort the query after the given number of milliseconds:
 
     request.get('http://httpbin.org/', {timeout: 1000}, function(error, body) {
-        if (error) {
-            console.error('Could not access httpbin with retries: %s', error);
-            return;
-        }
-        console.log('Received %s', body);
+        [...]
+    });
+
+### Headers
+
+Pass a `headers` param object to send each key as a header:
+
+    var headers = {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    };
+    request.post('http://httpbin.org/', {param: "value"}, {headers: headers}, function(error, body) {
+        [...]
     });
 
 ## License
