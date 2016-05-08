@@ -18,6 +18,7 @@ var urlLib = require('url');
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
  *		- timeout: time to wait for response in ms.
+ *		- headers: object with headers.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -41,6 +42,7 @@ exports.get = function(url, json, params, callback)
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
  *		- timeout: time to wait for response in ms.
+ *		- headers: object with headers.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -58,6 +60,7 @@ exports.post = function(url, json, params, callback)
  *	- params: optional additional parameters, currently supported:
  *		- retries: number of times to retry in case of error, default none.
  *		- timeout: time to wait for response in ms.
+ *		- headers: object with headers.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -105,6 +108,10 @@ function send(url, method, json, params, callback)
 		options.headers = {};
 	}
 	options.headers['user-agent'] = 'node.js basic-request bot';
+	for (var key in params.headers)
+	{
+		options[key] = params.headers[key];
+	}
 	options.agent = null;
 	sendWithRetries(params.retries, options, params, callback);
 }

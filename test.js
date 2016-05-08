@@ -67,6 +67,20 @@ function testPut(callback)
 	});
 }
 
+function testPostHeaders(callback)
+{
+	var params = {headers: {
+		'content-type': 'text/json',
+	}};
+	var json = {scopes: ['public_repo']};
+	request.post('https://httpbin.org/post', json, params, function(error, result)
+	{
+		testing.check(error, 'Should post to httpbin', callback);
+		testing.assert(result, 'Should have returned something', callback);
+		testing.success(callback);
+	});
+}
+
 /**
  * Run all module tests.
  */
@@ -77,6 +91,7 @@ exports.test = function(callback)
 		testGetRetries,
 		testPost,
 		testPut,
+		testPostHeaders,
 	], 60000, callback);
 };
 
