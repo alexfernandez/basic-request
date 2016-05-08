@@ -135,19 +135,13 @@ function sendWithRetries(retries, options, params, callback)
 		}
 		if (response.statusCode == 204)
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			return callback(null, null);
 		}
 		if (response.statusCode != 200)
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			request.abort();
 			if (retries)
@@ -163,10 +157,7 @@ function sendWithRetries(retries, options, params, callback)
 		});
 		response.on('error', function(error)
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			if (retries)
 			{
@@ -176,10 +167,7 @@ function sendWithRetries(retries, options, params, callback)
 		});
 		response.setTimeout(params.timeout || 0, function()
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			if (retries)
 			{
@@ -189,19 +177,13 @@ function sendWithRetries(retries, options, params, callback)
 		});
 		response.on('end', function()
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			return callback(null, body);
 		});
 		response.on('close', function()
 		{
-			if (finished)
-			{
-				return;
-			}
+			if (finished) return;
 			finished = true;
 			return callback(null, body);
 		});
@@ -209,10 +191,7 @@ function sendWithRetries(retries, options, params, callback)
 	request.setNoDelay();
 	request.setTimeout(params.timeout || 0, function()
 	{
-		if (finished)
-		{
-			return;
-		}
+		if (finished) return;
 		finished = true;
 		if (retries)
 		{
@@ -222,10 +201,7 @@ function sendWithRetries(retries, options, params, callback)
 	});
 	request.on('error', function(error)
 	{
-		if (finished)
-		{
-			return;
-		}
+		if (finished) return;
 		finished = true;
 		if (retries)
 		{
