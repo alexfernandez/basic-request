@@ -87,25 +87,25 @@ function send(url, method, json, params, callback)
 	callback = callback || function() {};
 	var options = urlLib.parse(url);
 	options.method = method;
-	if (typeof json == 'object')
+	options.headers = {};
+	if (json)
 	{
-		params.body = JSON.stringify(json);
-		options.headers = {
-			'Content-Type': 'application/json',
-			'Content-Length': params.body.length,
-		};
-	}
-	else if (json)
-	{
-		params.body = json;
-		options.headers = {
-			'Content-Type': 'text/plain',
-			'Content-Length': params.body.length,
-		};
-	}
-	else
-	{
-		options.headers = {};
+		if (typeof json == 'object')
+		{
+			params.body = JSON.stringify(json);
+			options.headers = {
+				'Content-Type': 'application/json',
+				'Content-Length': params.body.length,
+			};
+		}
+		else
+		{
+			params.body = json;
+			options.headers = {
+				'Content-Type': 'text/plain',
+				'Content-Length': params.body.length,
+			};
+		}
 	}
 	options.headers['user-agent'] = 'node.js basic-request bot';
 	for (var key in params.headers)
