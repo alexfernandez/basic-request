@@ -59,6 +59,11 @@ A couple of additional features have crept in, using a second (optional) paramet
 
     request.get(url, params, callback);
 
+For post and put, it's a third (optional) parameter `params`:
+
+    request.post(url, body, params, callback);
+    request.put(url, body, params, callback);
+
 ### Retries
 
 Pass a `retries` param to retry requests a number of times:
