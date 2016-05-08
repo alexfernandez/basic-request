@@ -133,6 +133,15 @@ function sendWithRetries(retries, options, params, callback)
 			request.abort();
 			return exports.get(location, params, callback);
 		}
+		if (response.statusCode == 204)
+		{
+			if (finished)
+			{
+				return;
+			}
+			finished = true;
+			return callback(null, null);
+		}
 		if (response.statusCode != 200)
 		{
 			if (finished)
