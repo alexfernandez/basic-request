@@ -124,7 +124,7 @@ function sendWithRetries(retries, options, params, callback)
 	{
 		protocol = https;
 	}
-	var request = protocol.get(options, function(response)
+	var request = protocol.request(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
 		{
