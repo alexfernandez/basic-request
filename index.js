@@ -19,6 +19,7 @@ var urlLib = require('url');
  *		- retries: number of times to retry in case of error, default none.
  *		- timeout: time to wait for response in ms.
  *		- headers: object with headers.
+ *		- agent: for repeated requests, see https://nodejs.org/api/http.html#http_class_http_agent.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -39,14 +40,8 @@ exports.get = function(url, json, params, callback)
  * Post to a URL, send to callback. Parameters:
  *	- url: the URL to access.
  *	- json: the object to send, can be a JSON string.
- *	- params: optional additional parameters, currently supported:
- *		- retries: number of times to retry in case of error, default none.
- *		- timeout: time to wait for response in ms.
- *		- headers: object with headers.
- *	- callback(error, body): error is null only if result is 200.
- *		If there is an error, the body can contain the following attributes:
- *		- statusCode: if status code is not 200.
- *		- readingResponse: if response could not be read.
+ *	- params: same as above.
+ *	- callback(error, body): same as above.
  */
 exports.post = function(url, json, params, callback)
 {
@@ -57,14 +52,8 @@ exports.post = function(url, json, params, callback)
  * Put to a URL, send to callback. Parameters:
  *	- url: the URL to access.
  *	- json: the object to send, can be a JSON string.
- *	- params: optional additional parameters, currently supported:
- *		- retries: number of times to retry in case of error, default none.
- *		- timeout: time to wait for response in ms.
- *		- headers: object with headers.
- *	- callback(error, body): error is null only if result is 200.
- *		If there is an error, the body can contain the following attributes:
- *		- statusCode: if status code is not 200.
- *		- readingResponse: if response could not be read.
+ *	- params: same as above.
+ *	- callback(error, body): same as above.
  */
 exports.put = function(url, json, params, callback)
 {
@@ -112,7 +101,7 @@ function send(url, method, json, params, callback)
 	{
 		options[key] = params.headers[key];
 	}
-	options.agent = null;
+	options.agent = params.agent || null;
 	sendWithRetries(params.retries, options, params, callback);
 }
 

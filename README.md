@@ -91,6 +91,20 @@ Pass a `headers` param object to send each key as a header:
         [...]
     });
 
+### Agent
+
+Pass an `agent` object to use for keep alive:
+
+    request.get('http://httpbin.org/', {agent: new AgentKeepAlive()}, function(error, body) {
+        [...]
+	});
+
+By default, no agent is used.
+Consider using
+[agentkeepalive](https://www.npmjs.com/package/agentkeepalive)
+if you need persistent connections,
+instead of the default agent.
+
 ## License
 
 (The MIT License)
