@@ -167,6 +167,16 @@ function sendWithRetries(retries, options, params, callback)
 			}
 			return callback('Error reading response: ' + error, {readingResponse: true});
 		});
+		response.on('aborted', function()
+		{
+			if (finished) return;
+			finished = true;
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, options, params, callback);
+			}
+			return callback('Response aborted', {responseAborted: true});
+		});
 		response.on('end', function()
 		{
 			if (finished) return;
@@ -203,6 +213,16 @@ function sendWithRetries(retries, options, params, callback)
 			return sendWithRetries(retries - 1, options, params, callback);
 		}
 		return callback('Error sending request: ' + error, {sendingRequest: true});
+	});
+	request.on('aborted', function()
+	{
+		if (finished) return;
+		finished = true;
+		if (retries)
+		{
+			return sendWithRetries(retries - 1, options, params, callback);
+		}
+		return callback('Request aborted', {requestAborted: true});
 	});
 	if (params.body)
 	{
