@@ -12,7 +12,7 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"prototypes": "*",
+		"prototypes": "^2.3.3",
 		"testing": "*"
 	},
 	"keywords" : ["request", "URL", "simple", "basic", "no-frills"],
