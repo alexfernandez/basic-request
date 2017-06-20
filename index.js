@@ -139,6 +139,19 @@ function sendWithRetries(retries, options, params, callback)
 			}
 			return callback('Invalid status code ' + response.statusCode, {statusCode: response.statusCode});
 		}
+		if (params.timeout)
+		{
+			response.setTimeout(params.timeout, function()
+			{
+				if (finished) return;
+				finished = true;
+				if (retries)
+				{
+					return sendWithRetries(retries - 1, options, params, callback);
+				}
+				return callback('Timeout while reading response', {responseTimeout: true});
+			});
+		}
 		var body = '';
 		response.on('data', function (chunk)
 		{
@@ -154,16 +167,6 @@ function sendWithRetries(retries, options, params, callback)
 			}
 			return callback('Error reading response: ' + error, {readingResponse: true});
 		});
-		response.setTimeout(params.timeout || 0, function()
-		{
-			if (finished) return;
-			finished = true;
-			if (retries)
-			{
-				return sendWithRetries(retries - 1, options, params, callback);
-			}
-			return callback('Timeout while reading response', {responseTimeout: true});
-		});
 		response.on('end', function()
 		{
 			if (finished) return;
@@ -178,16 +181,19 @@ function sendWithRetries(retries, options, params, callback)
 		});
 	});
 	request.setNoDelay();
-	request.setTimeout(params.timeout || 0, function()
+	if (params.timeout)
 	{
-		if (finished) return;
-		finished = true;
-		if (retries)
+		request.setTimeout(params.timeout, function()
 		{
-			return sendWithRetries(retries - 1, options, params, callback);
-		}
-		return callback('Timeout while sending request', {requestTimeout: true});
-	});
+			if (finished) return;
+			finished = true;
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, options, params, callback);
+			}
+			return callback('Timeout while sending request', {requestTimeout: true});
+		});
+	}
 	request.on('error', function(error)
 	{
 		if (finished) return;
