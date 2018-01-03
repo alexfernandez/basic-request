@@ -20,6 +20,7 @@ var urlLib = require('url');
  *		- timeout: time to wait for response in ms.
  *		- headers: object with headers.
  *		- agent: for repeated requests, see https://nodejs.org/api/http.html#http_class_http_agent.
+ *		- buffer: if true, return raw buffer
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
@@ -152,10 +153,10 @@ function sendWithRetries(retries, options, params, callback)
 				return callback('Timeout while reading response', {responseTimeout: true});
 			});
 		}
-		var body = '';
+		var body = [];
 		response.on('data', function (chunk)
 		{
-			body += chunk;
+			body.push(chunk);
 		});
 		response.on('error', function(error)
 		{
@@ -181,13 +182,13 @@ function sendWithRetries(retries, options, params, callback)
 		{
 			if (finished) return;
 			finished = true;
-			return callback(null, body);
+			return callback(null, getResult(body, params));
 		});
 		response.on('close', function()
 		{
 			if (finished) return;
 			finished = true;
-			return callback(null, body);
+			return callback(null, getResult(body, params));
 		});
 	});
 	request.setNoDelay();
@@ -229,6 +230,13 @@ function sendWithRetries(retries, options, params, callback)
 		request.write(params.body, 'utf8');
 	}
 	request.end();
+}
+
+function getResult(body, params)
+{
+	var buffer = Buffer.concat(body)
+	if (params.buffer) return buffer;
+	return String(buffer);
 }
 
 // show API if invoked directly

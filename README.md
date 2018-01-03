@@ -105,6 +105,11 @@ Consider using
 if you need persistent connections,
 instead of the default agent.
 
+### Buffer
+
+If `params.buffer` is truthy, then a raw buffer is returned
+instead of converting to string first.
+
 ## License
 
 (The MIT License)
