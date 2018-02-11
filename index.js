@@ -100,7 +100,7 @@ function send(url, method, json, params, callback)
 	options.headers['user-agent'] = 'node.js basic-request bot';
 	for (var key in params.headers)
 	{
-		options[key] = params.headers[key];
+		options.headers[key] = params.headers[key];
 	}
 	options.agent = params.agent || null;
 	sendWithRetries(params.retries, options, params, callback);
