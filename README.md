@@ -19,6 +19,8 @@ Install with npm:
 
     npm install basic-request
 
+### GET
+
 In your code just require the package:
 
     var request = require('basic-request');
@@ -87,7 +89,7 @@ Pass a `headers` param object to send each key as a header:
     var headers = {
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
     };
-    request.post('http://httpbin.org/', {param: "value"}, {headers: headers}, function(error, body) {
+    request.post('http://httpbin.org/', {a: 5}, {headers: headers}, function(error, body) {
         [...]
     });
 
@@ -110,11 +112,31 @@ instead of the default agent.
 If `params.buffer` is truthy, then a raw buffer is returned
 instead of converting to string first.
 
+## `getResponse()`
+
+In case you want to get the response stream and parse it yourself,
+basic-request since 1.2.0 supports `getResponse()`:
+
+    request.getResponse(url, method, body, params, callback);
+
+where `method` can be any HTTP valid method: `GET`, `POST`...
+and the `callback` will have the signature `function(error, response)`.
+The remaining parameters are as explained above.
+`body` and `params` are still optional.
+Example:
+
+``` js
+request.getResponse('http://httpbin.org/post', POST, {a: 5}, function(error, response) {
+    if (error) return console.error('Could not post: %s', error);
+    response.pipe(output);
+});
+```
+
 ## License
 
 (The MIT License)
 
-Copyright (c) 2013 Alex Fernández <alexfernandeznpm@gmail.com>
+Copyright (c) 2013-2018 Alex Fernández <alexfernandeznpm@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
