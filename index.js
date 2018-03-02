@@ -40,7 +40,7 @@ exports.get = function(url, json, params, callback)
 /**
  * Post to a URL, send to callback. Parameters:
  *	- url: the URL to access.
- *	- json: the object to send, can be a JSON string.
+ *	- json: optional object to send, can be a JSON string.
  *	- params: same as above.
  *	- callback(error, body): same as above.
  */
@@ -52,7 +52,7 @@ exports.post = function(url, json, params, callback)
 /**
  * Put to a URL, send to callback. Parameters:
  *	- url: the URL to access.
- *	- json: the object to send, can be a JSON string.
+ *	- json: optional object to send, can be a JSON string.
  *	- params: same as above.
  *	- callback(error, body): same as above.
  */
@@ -60,6 +60,31 @@ exports.put = function(url, json, params, callback)
 {
 	send(url, 'PUT', json, params, callback);
 };
+
+/**
+ * Get the response to parse yourself. Parameters:
+ *	- url: the URL to access.
+ *	- method: string with the method to use ('GET', 'POST'...).
+ *	- json: optional object to send, can be a JSON string.
+ *	- params: same as above.
+ *	- callback(error, body): same as above.
+ */
+exports.getResponse = function(url, method, json, params, callback)
+{
+	if (typeof params == 'function')
+	{
+		callback = params;
+		params = {};
+	}
+	else if (typeof json == 'function')
+	{
+		callback = json;
+		params = {};
+		json = null;
+	}
+	callback = callback || function() {};
+	getResponse(url, method, json, params, callback);
+}
 
 function send(url, method, json, params, callback)
 {
@@ -96,7 +121,7 @@ function sendWithRetries(retries, url, method, json, params, callback)
 
 function sendWithResponse(url, method, json, params, callback)
 {
-	exports.getResponse(url, method, json, params, function(error, response)
+	getResponse(url, method, json, params, function(error, response)
 	{
 		if (error) return callback(error, response);
 		if (!response)
@@ -137,7 +162,7 @@ function sendWithResponse(url, method, json, params, callback)
 	})
 }
 
-exports.getResponse = function(url, method, json, params, callback)
+function getResponse(url, method, json, params, callback)
 {
 	var options = urlLib.parse(url);
 	options.method = method;
@@ -180,7 +205,7 @@ exports.getResponse = function(url, method, json, params, callback)
 			// follow redirection
 			var location = response.headers.location;
 			request.abort();
-			return exports.getResponse(location, method, json, params, callback)
+			return getResponse(location, method, json, params, callback)
 		}
 		if (response.statusCode == 204)
 		{
@@ -233,7 +258,7 @@ exports.getResponse = function(url, method, json, params, callback)
 		request.write(params.body, 'utf8');
 	}
 	request.end();
-};
+}
 
 function getResult(body, params)
 {
