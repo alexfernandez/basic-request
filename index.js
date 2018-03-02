@@ -75,6 +75,70 @@ function send(url, method, json, params, callback)
 		json = null;
 	}
 	callback = callback || function() {};
+	sendWithRetries(params.retries, url, method, json, params, callback);
+}
+
+function sendWithRetries(retries, url, method, json, params, callback)
+{
+	sendWithResponse(url, method, json, params, function(error, result)
+	{
+		if (error)
+		{
+			if (retries)
+			{
+				return sendWithRetries(retries - 1, url, method, json, params, callback);
+			}
+			return callback(error);
+		}
+		return callback(null, result)
+	});
+}
+
+function sendWithResponse(url, method, json, params, callback)
+{
+	exports.getResponse(url, method, json, params, function(error, response)
+	{
+		if (error) return callback(error);
+		if (!response)
+		{
+			return callback(null, null)
+		}
+		var finished = false;
+		var body = [];
+		response.on('data', function (chunk)
+		{
+			body.push(chunk);
+		});
+		response.on('error', function(error)
+		{
+			if (finished) return;
+			finished = true;
+			return callback('Error reading response: ' + error, {readingResponse: true});
+		});
+		response.on('aborted', function()
+		{
+			if (finished) return;
+			finished = true;
+			return callback('Response aborted', {responseAborted: true});
+		});
+		response.on('end', function()
+		{
+			if (finished) return;
+			finished = true;
+			return callback(null, getResult(body, params));
+		});
+		response.on('close', function()
+		{
+			if (finished) return;
+			finished = true;
+			return callback(null, getResult(body, params));
+		});
+
+	})
+}
+
+exports.getResponse = function(url, method, json, params, callback)
+{
 	var options = urlLib.parse(url);
 	options.method = method;
 	options.headers = {};
@@ -103,11 +167,6 @@ function send(url, method, json, params, callback)
 		options.headers[key] = params.headers[key];
 	}
 	options.agent = params.agent || null;
-	sendWithRetries(params.retries, options, json, params, callback);
-}
-
-function sendWithRetries(retries, options, json, params, callback)
-{
 	var finished = false;
 	var protocol = http;
 	if (options.protocol == 'https:')
@@ -121,7 +180,7 @@ function sendWithRetries(retries, options, json, params, callback)
 			// follow redirection
 			var location = response.headers.location;
 			request.abort();
-			return send(location, options.method, json, params, callback)
+			return exports.getResponse(location, method, json, params, callback)
 		}
 		if (response.statusCode == 204)
 		{
@@ -134,10 +193,6 @@ function sendWithRetries(retries, options, json, params, callback)
 			if (finished) return;
 			finished = true;
 			request.abort();
-			if (retries)
-			{
-				return sendWithRetries(retries - 1, options, json, params, callback);
-			}
 			return callback('Invalid status code ' + response.statusCode, {statusCode: response.statusCode});
 		}
 		if (params.timeout)
@@ -146,50 +201,10 @@ function sendWithRetries(retries, options, json, params, callback)
 			{
 				if (finished) return;
 				finished = true;
-				if (retries)
-				{
-					return sendWithRetries(retries - 1, options, json, params, callback);
-				}
 				return callback('Timeout while reading response', {responseTimeout: true});
 			});
 		}
-		var body = [];
-		response.on('data', function (chunk)
-		{
-			body.push(chunk);
-		});
-		response.on('error', function(error)
-		{
-			if (finished) return;
-			finished = true;
-			if (retries)
-			{
-				return sendWithRetries(retries - 1, options, json, params, callback);
-			}
-			return callback('Error reading response: ' + error, {readingResponse: true});
-		});
-		response.on('aborted', function()
-		{
-			if (finished) return;
-			finished = true;
-			if (retries)
-			{
-				return sendWithRetries(retries - 1, options, json, params, callback);
-			}
-			return callback('Response aborted', {responseAborted: true});
-		});
-		response.on('end', function()
-		{
-			if (finished) return;
-			finished = true;
-			return callback(null, getResult(body, params));
-		});
-		response.on('close', function()
-		{
-			if (finished) return;
-			finished = true;
-			return callback(null, getResult(body, params));
-		});
+		return callback(null, response);
 	});
 	request.setNoDelay();
 	if (params.timeout)
@@ -198,10 +213,6 @@ function sendWithRetries(retries, options, json, params, callback)
 		{
 			if (finished) return;
 			finished = true;
-			if (retries)
-			{
-				return sendWithRetries(retries - 1, options, json, params, callback);
-			}
 			return callback('Timeout while sending request', {requestTimeout: true});
 		});
 	}
@@ -209,20 +220,12 @@ function sendWithRetries(retries, options, json, params, callback)
 	{
 		if (finished) return;
 		finished = true;
-		if (retries)
-		{
-			return sendWithRetries(retries - 1, options, json, params, callback);
-		}
 		return callback('Error sending request: ' + error, {sendingRequest: true});
 	});
 	request.on('aborted', function()
 	{
 		if (finished) return;
 		finished = true;
-		if (retries)
-		{
-			return sendWithRetries(retries - 1, options, json, params, callback);
-		}
 		return callback('Request aborted', {requestAborted: true});
 	});
 	if (params.body)
@@ -230,7 +233,7 @@ function sendWithRetries(retries, options, json, params, callback)
 		request.write(params.body, 'utf8');
 	}
 	request.end();
-}
+};
 
 function getResult(body, params)
 {
