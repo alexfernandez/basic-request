@@ -56,6 +56,18 @@ function testPost(callback)
 	});
 }
 
+function testRedirectToPost(callback)
+{
+	var json = {scopes: ['public_repo']};
+	const url = 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2Fpost'
+	request.post(url, json, function(error, result)
+	{
+		testing.check(error, 'Should redirect post to httpbin', callback);
+		testing.assert(result, 'Should have returned something', callback);
+		testing.success(callback);
+	});
+}
+
 function testPut(callback)
 {
 	var json = {scopes: ['public_repo']};
@@ -90,6 +102,7 @@ exports.test = function(callback)
 		testGet,
 		testGetRetries,
 		testPost,
+		testRedirectToPost,
 		testPut,
 		testPostHeaders,
 	], 60000, callback);
