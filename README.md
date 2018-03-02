@@ -35,7 +35,7 @@ request.get('http://httpbin.org/', function(error, body) {
         return console.error('Could not access httpbin: %s', error);
     }
     console.log('Received %s', body);
-    });
+});
 ```
 
 That is it! No wading through responses, parsing status codes or anything else;
@@ -88,6 +88,7 @@ Pass a `timeout` param to abort the query after the given number of milliseconds
 request.get('http://httpbin.org/', {timeout: 1000}, function(error, body) {
     [...]
 });
+```
 
 ### Headers
 
