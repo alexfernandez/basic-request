@@ -23,17 +23,20 @@ Install with npm:
 
 In your code just require the package:
 
-    var request = require('basic-request');
+``` js
+var request = require('basic-request');
+```
 
 and then use `get()` with a callback in the traditional node.js fashion:
 
-    request.get('http://httpbin.org/', function(error, body) {
-        if (error) {
-            console.error('Could not access httpbin: %s', error);
-            return;
-        }
-        console.log('Received %s', body);
+```
+request.get('http://httpbin.org/', function(error, body) {
+    if (error) {
+        return console.error('Could not access httpbin: %s', error);
+    }
+    console.log('Received %s', body);
     });
+```
 
 That is it! No wading through responses, parsing status codes or anything else;
 basic-response will do that for you. It even follows redirects!
@@ -45,13 +48,14 @@ You can see a couple of examples in [the test file](https://github.com/alexferna
 The basic-request package now supports PUT and POST methods,
 and will even stringify objects into JSON for you:
 
-    request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) {
-        if (error) {
-            console.error('Could not access httpbin with POST: %s', error);
-            return;
-        }
-        console.log('Received %s', body);
-    });
+``` js
+request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) {
+    if (error) {
+        return console.error('Could not access httpbin with POST: %s', error);
+    }
+    console.log('Received %s', body);
+});
+```
 
 and likewise with `request.put()`.
 
@@ -70,36 +74,43 @@ For post and put, it's a third (optional) parameter `params`:
 
 Pass a `retries` param to retry requests a number of times:
 
-    request.get('http://httpbin.org/', {retries: 2}, function(error, body) {
-        [...]
-    });
+``` js
+request.get('http://httpbin.org/', {retries: 2}, function(error, body) {
+    [...]
+});
+```
 
 ### Timeout
 
 Pass a `timeout` param to abort the query after the given number of milliseconds:
 
-    request.get('http://httpbin.org/', {timeout: 1000}, function(error, body) {
-        [...]
-    });
+``` js
+request.get('http://httpbin.org/', {timeout: 1000}, function(error, body) {
+    [...]
+});
 
 ### Headers
 
 Pass a `headers` param object to send each key as a header:
 
-    var headers = {
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    };
-    request.post('http://httpbin.org/', {a: 5}, {headers: headers}, function(error, body) {
-        [...]
-    });
+``` js
+var headers = {
+    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+};
+request.post('http://httpbin.org/', {a: 5}, {headers: headers}, function(error, body) {
+    [...]
+});
+```
 
 ### Agent
 
 Pass an `agent` object to use for keep alive:
 
-    request.get('http://httpbin.org/', {agent: new AgentKeepAlive()}, function(error, body) {
-        [...]
-	});
+``` js
+request.get('http://httpbin.org/', {agent: new AgentKeepAlive()}, function(error, body) {
+    [...]
+});
+```
 
 By default, no agent is used.
 Consider using
