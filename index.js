@@ -88,7 +88,7 @@ function sendWithRetries(retries, url, method, json, params, callback)
 			{
 				return sendWithRetries(retries - 1, url, method, json, params, callback);
 			}
-			return callback(error);
+			return callback(error, result);
 		}
 		return callback(null, result)
 	});
@@ -98,7 +98,7 @@ function sendWithResponse(url, method, json, params, callback)
 {
 	exports.getResponse(url, method, json, params, function(error, response)
 	{
-		if (error) return callback(error);
+		if (error) return callback(error, response);
 		if (!response)
 		{
 			return callback(null, null)
