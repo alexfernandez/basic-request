@@ -59,7 +59,7 @@ function testPost(callback)
 function testRedirectToPost(callback)
 {
 	var json = {scopes: ['public_repo']};
-	const url = 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2Fpost'
+	var url = 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2Fpost'
 	request.post(url, json, function(error, result)
 	{
 		testing.check(error, 'Should redirect post to httpbin', callback);
