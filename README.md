@@ -172,6 +172,16 @@ request.getResponse('http://httpbin.org/post', POST, {a: 5}, function(error, res
 });
 ```
 
+### Parse JSON
+
+When the server response has content-type `application/json`
+then it will be parsed and returned as an object instead of a string:
+
+``` js
+const result = await request.get('http://httpbin.org/json')
+console.log(`Type ${typeof result}`) //-> 'object'
+```
+
 ## License
 
 (The MIT License)

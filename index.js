@@ -160,13 +160,13 @@ function sendWithResponse(url, method, json, params, callback)
 		{
 			if (finished) return;
 			finished = true;
-			return callback(null, getResult(body, params));
+			return callback(null, getResult(body, params, response));
 		});
 		response.on('close', function()
 		{
 			if (finished) return;
 			finished = true;
-			return callback(null, getResult(body, params));
+			return callback(null, getResult(body, params, response));
 		});
 
 	})
@@ -270,8 +270,13 @@ function getResponse(url, method, json, params, callback)
 	request.end();
 }
 
-function getResult(body, params)
+function getResult(body, params, response)
 {
+	const contentType = response.headers['content-type']
+	if (contentType == 'application/json')
+	{
+		return JSON.parse(body)
+	}
 	var buffer = Buffer.concat(body)
 	if (params.buffer) return buffer;
 	return String(buffer);

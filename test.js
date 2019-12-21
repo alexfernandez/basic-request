@@ -48,6 +48,12 @@ async function testAsyncGet()
 	testing.assert(result3.includes('httpbin'), 'Invalid contents with timeout')
 }
 
+async function testAsyncGetJson()
+{
+	const result = await request.get('http://httpbin.org/json')
+	testing.equals(typeof result, 'object', 'Invalid type for JSON result')
+}
+
 function testPost(callback)
 {
 	var json = {scopes: ['public_repo']};
@@ -120,6 +126,7 @@ exports.test = function(callback)
 		testGet,
 		testGetRetries,
 		testAsyncGet,
+		testAsyncGetJson,
 		testPost,
 		testAsyncPost,
 		testRedirectToPost,
