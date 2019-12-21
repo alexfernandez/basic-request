@@ -273,7 +273,7 @@ function getResponse(url, method, json, params, callback)
 function getResult(body, params, response)
 {
 	const contentType = response.headers['content-type']
-	if (contentType == 'application/json')
+	if (contentType && contentType.includes('application/json'))
 	{
 		return JSON.parse(body)
 	}
