@@ -54,6 +54,19 @@ async function testAsyncGetJson()
 	testing.equals(typeof result, 'object', 'Invalid type for JSON result')
 }
 
+async function testAsyncError()
+{
+	try
+	{
+		await request.get('http://httpbin.org/fake')
+		throw new Error('Should never get here')
+	}
+	catch (error)
+	{
+		testing.equals(error.statusCode, 404, 'Should return not found')
+	}
+}
+
 function testPost(callback)
 {
 	var json = {scopes: ['public_repo']};
@@ -127,6 +140,7 @@ exports.test = function(callback)
 		testGetRetries,
 		testAsyncGet,
 		testAsyncGetJson,
+		testAsyncError,
 		testPost,
 		testAsyncPost,
 		testRedirectToPost,

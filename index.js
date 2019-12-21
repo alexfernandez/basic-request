@@ -107,10 +107,23 @@ function send(url, method, json, params, callback)
 	}
 	return new Promise((resolve, reject) => {
 		sendWithRetries(params.retries, url, method, json, params, (error, result) => {
-			if (error) return reject(error)
+			if (error) return reject(new RequestError(error, result))
 			return resolve(result)
 		});
 	})
+}
+
+class RequestError extends Error
+{
+	constructor(message, result)
+	{
+		super(message)
+		this.name = this.constructor.name
+		for (const key in result)
+		{
+			this[key] = result[key]
+		}
+	}
 }
 
 function sendWithRetries(retries, url, method, json, params, callback)
