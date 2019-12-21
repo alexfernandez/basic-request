@@ -36,9 +36,20 @@ var request = require('basic-request');
 
 ### GET
 
-To make a regular GET request use `request.get()` with a callback in the traditional node.js fashion:
+To make a regular GET request use `await request.get()`:
 
+``` js
+const body = await request.get('http://httpbin.org/')
+console.log('Received %s', body);
 ```
+
+That is it! No wading through responses, parsing status codes or anything else;
+basic-request will do that for you.
+Any errors are thrown as exceptions.
+
+You can also use a callback in the traditional node.js fashion:
+
+``` js
 request.get('http://httpbin.org/', function(error, body) {
     if (error) {
         return console.error('Could not access httpbin: %s', error);
@@ -47,8 +58,7 @@ request.get('http://httpbin.org/', function(error, body) {
 });
 ```
 
-That is it! No wading through responses, parsing status codes or anything else;
-basic-response will do that for you. It even follows redirects!
+It even follows redirects!
 
 You can see a couple of examples in [the test file](https://github.com/alexfernandez/basic-request/blob/master/test.js).
 
@@ -58,6 +68,17 @@ The basic-request package supports PUT and POST methods,
 and will even stringify objects into JSON for you:
 
 ``` js
+try {
+    const body = await request.post('http://httpbin.org/', {attribute: 'value'})
+    console.log('Received %s', body);
+} catch (exception) {
+    return console.error('Could not access httpbin with POST: %s', error);
+}
+```
+
+and likewise with `request.put()`. Again, can be used with a traditional callback as last parameter:
+
+``` js
 request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) {
     if (error) {
         return console.error('Could not access httpbin with POST: %s', error);
@@ -65,8 +86,6 @@ request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) 
     console.log('Received %s', body);
 });
 ```
-
-and likewise with `request.put()`.
 
 ## *BLOAT ALERT*
 

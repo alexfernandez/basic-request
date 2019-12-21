@@ -38,6 +38,16 @@ function testGetRetries(callback)
 	});
 }
 
+async function testAsyncGet()
+{
+	const result1 = await request.get('http://httpbin.org/')
+	testing.assert(result1.includes('httpbin'), 'Invalid contents for httpbin page')
+	const result2 = await request.get('http://httpbin.org/', {send: 'whatever'})
+	testing.assert(result2.includes('httpbin'), 'Invalid contents with json')
+	const result3 = await request.get('http://httpbin.org/', {send: 'whatever'}, {timeout: 1000})
+	testing.assert(result3.includes('httpbin'), 'Invalid contents with timeout')
+}
+
 function testPost(callback)
 {
 	var json = {scopes: ['public_repo']};
@@ -53,6 +63,15 @@ function testPost(callback)
 			testing.success(callback);
 		});
 	});
+}
+
+async function testAsyncPost()
+{
+	var json = {scopes: ['public_repo']};
+	const result1 = await request.post('https://httpbin.org/post', json)
+	testing.assert(result1, 'Should have returned something');
+	const result2 = await request.post('https://httpbin.org/post', json, {timeout: 1000})
+	testing.assert(result2, 'Should have returned something with params');
 }
 
 function testRedirectToPost(callback)
@@ -100,7 +119,9 @@ exports.test = function(callback)
 	testing.run([
 		testGet,
 		testGetRetries,
+		testAsyncGet,
 		testPost,
+		testAsyncPost,
 		testRedirectToPost,
 		testPut,
 		testPostHeaders,

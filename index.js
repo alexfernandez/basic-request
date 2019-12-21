@@ -34,7 +34,7 @@ exports.get = function(url, json, params, callback)
 		params = json;
 		json = null;
 	}
-	send(url, 'GET', json, params, callback);
+	return send(url, 'GET', json, params, callback);
 };
 
 /**
@@ -46,7 +46,7 @@ exports.get = function(url, json, params, callback)
  */
 exports.post = function(url, json, params, callback)
 {
-	send(url, 'POST', json, params, callback);
+	return send(url, 'POST', json, params, callback);
 };
 
 /**
@@ -58,7 +58,7 @@ exports.post = function(url, json, params, callback)
  */
 exports.put = function(url, json, params, callback)
 {
-	send(url, 'PUT', json, params, callback);
+	return send(url, 'PUT', json, params, callback);
 };
 
 /**
@@ -98,9 +98,19 @@ function send(url, method, json, params, callback)
 		callback = json;
 		params = {};
 		json = null;
+	} else if (!params) {
+		params = {}
 	}
-	callback = callback || function() {};
-	sendWithRetries(params.retries, url, method, json, params, callback);
+	if (callback)
+	{
+		return sendWithRetries(params.retries, url, method, json, params, callback);
+	}
+	return new Promise((resolve, reject) => {
+		sendWithRetries(params.retries, url, method, json, params, (error, result) => {
+			if (error) return reject(error)
+			return resolve(result)
+		});
+	})
 }
 
 function sendWithRetries(retries, url, method, json, params, callback)
