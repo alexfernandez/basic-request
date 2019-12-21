@@ -1,7 +1,7 @@
 {
 	"name": "basic-request",
-	"version": "1.2.2",
-	"description": "Basic request to a URL, send to a function(error, body). Follows redirects.",
+	"version": "2.0.0",
+	"description": "Basic request to a URL, send to a function(error, body), following redirects",
 	"homepage": "https://github.com/alexfernandez/basic-request",
 	"contributors": [
 		"Alex Fernández <alexfernandeznpm@gmail.com>"
@@ -25,7 +25,7 @@
 		"no-frills"
 	],
 	"engines": {
-		"node": ">=0.10.3"
+		"node": ">=8"
 	},
 	"preferGlobal": false,
 	"scripts": {

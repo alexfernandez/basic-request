@@ -2,24 +2,31 @@
 
 # basic-request
 
-A very basic library to request a URL and get a result.
+A very basic library to send an HTTP request to a URL and get a result.
 
 ## Why Another Request Library?
 
 There are approximately 10000 request packages in npm. This one adds no extra dependencies,
 and uses the node.js convention of `function(error, result)` without any added parameters.
 No longer will you need to check the status code of the response; basic-request treats all
-status codes other than 200 as errors.
+status codes other than 200 as errors. The library can work with promises too.
 
 As an extra, basic-request follows redirects.
 
-## Usage
+## Installation
 
 Install with npm:
 
     npm install basic-request
 
-### GET
+### Compatibility
+
+Versions 2 and later should be used at least with Node.js v8 or later:
+
+* Node.js v8 or later: ^2.0.0.
+* Node.js v6 or earlier: ^1.2.0.
+
+## Usage
 
 In your code just require the package:
 
@@ -27,7 +34,9 @@ In your code just require the package:
 var request = require('basic-request');
 ```
 
-and then use `get()` with a callback in the traditional node.js fashion:
+### GET
+
+To make a regular GET request use `request.get()` with a callback in the traditional node.js fashion:
 
 ```
 request.get('http://httpbin.org/', function(error, body) {
@@ -45,7 +54,7 @@ You can see a couple of examples in [the test file](https://github.com/alexferna
 
 ### PUT and POST
 
-The basic-request package now supports PUT and POST methods,
+The basic-request package supports PUT and POST methods,
 and will even stringify objects into JSON for you:
 
 ``` js
