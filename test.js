@@ -6,7 +6,6 @@
  */
 
 // requires
-require('prototypes');
 var testing = require('testing');
 var request = require('./index.js');
 
@@ -16,7 +15,7 @@ function testGet(callback)
 	request.get('http://httpbin.org/', function(error, result)
 	{
 		testing.check(error, 'Could not access httpbin', callback);
-		testing.assert(result.contains('httpbin'), 'Invalid contents for httpbin page', callback);
+		testing.assert(result.includes('httpbin'), 'Invalid contents for httpbin page', callback);
 		request.get('http://httpbin.org/fake_page', function(error)
 		{
 			testing.assert(error, 'Could access fake page', callback);
