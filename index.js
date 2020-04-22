@@ -288,7 +288,11 @@ function getResult(body, params, response)
 	const contentType = response.headers['content-type']
 	if (contentType && contentType.includes('application/json'))
 	{
-		return JSON.parse(body)
+		try {
+			return JSON.parse(body)
+		} catch(error) {
+			return body
+		}
 	}
 	var buffer = Buffer.concat(body)
 	if (params.buffer) return buffer;
