@@ -6,9 +6,9 @@
  */
 
 // requires
-var http = require('http');
-var https = require('https');
-var urlLib = require('url');
+const http = require('http');
+const https = require('https');
+const urlLib = require('url');
 
 
 /**
@@ -151,8 +151,8 @@ function sendWithResponse(url, method, json, params, callback)
 		{
 			return callback(null, null)
 		}
-		var finished = false;
-		var body = [];
+		let finished = false;
+		const body = [];
 		response.on('data', function (chunk)
 		{
 			body.push(chunk);
@@ -187,7 +187,7 @@ function sendWithResponse(url, method, json, params, callback)
 
 function getResponse(url, method, json, params, callback)
 {
-	var options = urlLib.parse(url);
+	const options = urlLib.parse(url);
 	options.method = method;
 	options.headers = {};
 	if (json)
@@ -210,23 +210,23 @@ function getResponse(url, method, json, params, callback)
 		}
 	}
 	options.headers['user-agent'] = 'node.js basic-request bot';
-	for (var key in params.headers)
+	for (const key in params.headers)
 	{
 		options.headers[key] = params.headers[key];
 	}
 	options.agent = params.agent || null;
-	var finished = false;
-	var protocol = http;
+	let finished = false;
+	let protocol = http;
 	if (options.protocol == 'https:')
 	{
 		protocol = https;
 	}
-	var request = protocol.request(options, function(response)
+	const request = protocol.request(options, function(response)
 	{
 		if (response.statusCode == 301 || response.statusCode == 302)
 		{
 			// follow redirection
-			var location = response.headers.location;
+			const location = response.headers.location;
 			request.abort();
 			return getResponse(location, method, json, params, callback)
 		}
@@ -285,7 +285,7 @@ function getResponse(url, method, json, params, callback)
 
 function getResult(body, params, response)
 {
-	var buffer = Buffer.concat(body)
+	const buffer = Buffer.concat(body)
 	const contentType = response.headers['content-type']
 	if (contentType && contentType.includes('application/json'))
 	{

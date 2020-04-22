@@ -6,8 +6,8 @@
  */
 
 // requires
-var testing = require('testing');
-var request = require('./index.js');
+const testing = require('testing');
+const request = require('./index.js');
 
 
 function testGet(callback)
@@ -30,7 +30,7 @@ function testGet(callback)
 
 function testGetRetries(callback)
 {
-	var params = {retries: 3};
+	const params = {retries: 3};
 	request.get('https://qeriouosdfs.qruiojojsdlksfjl.ciouior/', params, function(error)
 	{
 		testing.assert(error, 'Should not access fake domain with retries', callback);
@@ -69,7 +69,7 @@ async function testAsyncError()
 
 function testPost(callback)
 {
-	var json = {scopes: ['public_repo']};
+	const json = {scopes: ['public_repo']};
 	request.post('https://httpbin.org/post', json, function(error, result)
 	{
 		testing.check(error, 'Should post to httpbin', callback);
@@ -86,7 +86,7 @@ function testPost(callback)
 
 async function testAsyncPost()
 {
-	var json = {scopes: ['public_repo']};
+	const json = {scopes: ['public_repo']};
 	const result1 = await request.post('https://httpbin.org/post', json)
 	testing.assert(result1, 'Should have returned something');
 	const result2 = await request.post('https://httpbin.org/post', json, {timeout: 1000})
@@ -95,8 +95,8 @@ async function testAsyncPost()
 
 function testRedirectToPost(callback)
 {
-	var json = {scopes: ['public_repo']};
-	var url = 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2Fpost'
+	const json = {scopes: ['public_repo']};
+	const url = 'http://httpbin.org/redirect-to?url=http%3A%2F%2Fhttpbin.org%2Fpost'
 	request.post(url, json, function(error, result)
 	{
 		testing.check(error, 'Should redirect post to httpbin', callback);
@@ -107,7 +107,7 @@ function testRedirectToPost(callback)
 
 function testPut(callback)
 {
-	var json = {scopes: ['public_repo']};
+	const json = {scopes: ['public_repo']};
 	request.put('https://httpbin.org/put', json, function(error, result)
 	{
 		testing.check(error, 'Should put to httpbin', callback);
@@ -118,10 +118,10 @@ function testPut(callback)
 
 function testPostHeaders(callback)
 {
-	var params = {headers: {
+	const params = {headers: {
 		'content-type': 'text/json',
 	}};
-	var json = {scopes: ['public_repo']};
+	const json = {scopes: ['public_repo']};
 	request.post('https://httpbin.org/post', json, params, function(error, result)
 	{
 		testing.check(error, 'Should post to httpbin', callback);
