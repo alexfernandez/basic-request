@@ -285,16 +285,16 @@ function getResponse(url, method, json, params, callback)
 
 function getResult(body, params, response)
 {
+	var buffer = Buffer.concat(body)
 	const contentType = response.headers['content-type']
 	if (contentType && contentType.includes('application/json'))
 	{
 		try {
-			return JSON.parse(body)
+			return JSON.parse(buffer)
 		} catch(error) {
-			return {error, body}
+			return {error, body: String(buffer)}
 		}
 	}
-	var buffer = Buffer.concat(body)
 	if (params.buffer) return buffer;
 	return String(buffer);
 }
