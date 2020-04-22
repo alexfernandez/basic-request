@@ -291,7 +291,7 @@ function getResult(body, params, response)
 		try {
 			return JSON.parse(body)
 		} catch(error) {
-			return body
+			return {error}
 		}
 	}
 	var buffer = Buffer.concat(body)
