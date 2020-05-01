@@ -62,9 +62,9 @@ It even follows redirects!
 
 You can see a couple of examples in [the test file](https://github.com/alexfernandez/basic-request/blob/master/test.js).
 
-### PUT and POST
+### PUT, POST, PATCH, DELETE
 
-The basic-request package supports PUT and POST methods,
+The basic-request package supports PUT, POST, PATCH and DELETE methods,
 and will even stringify objects into JSON for you:
 
 ``` js
@@ -76,7 +76,8 @@ try {
 }
 ```
 
-and likewise with `request.put()`. Again, can be used with a traditional callback as last parameter:
+Likewise with `request.put()`, `request.patch()`, `request.delete()`.
+Again, can be used with a traditional callback as last parameter:
 
 ``` js
 request.post('http://httpbin.org/', {attribute: 'value'}, function(error, body) {

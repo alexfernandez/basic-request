@@ -28,7 +28,8 @@ function get(url, json, params, callback)
 }
 
 /**
- * Post to a URL, send to callback. Parameters:
+ * The following exported functions all have the same parameters,
+ * with only the method changing:
  *	- url: the URL to access.
  *	- json: optional object to send, can be a JSON string.
  *	- params: same as above.
@@ -39,16 +40,19 @@ function post(url, json, params, callback)
 	return send(url, 'POST', json, params, callback);
 }
 
-/**
- * Put to a URL, send to callback. Parameters:
- *	- url: the URL to access.
- *	- json: optional object to send, can be a JSON string.
- *	- params: same as above.
- *	- callback(error, body): same as above.
- */
 function put(url, json, params, callback)
 {
 	return send(url, 'PUT', json, params, callback);
+}
+
+function patch(url, json, params, callback)
+{
+	return send(url, 'PATCH', json, params, callback);
+}
+
+function remove(url, json, params, callback)
+{
+	return send(url, 'DELETE', json, params, callback);
 }
 
 /**
@@ -94,5 +98,8 @@ function getParsed(url, method, json, params) {
 	})
 }
 
-module.exports = {get, post, put, getResponse, getParsed}
+module.exports = {
+	get, post, put, patch, getResponse, getParsed
+}
+module.exports.delete = remove
 
