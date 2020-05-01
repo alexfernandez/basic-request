@@ -1,4 +1,4 @@
-const {send, getRawResponse} = require('./lib/request.js')
+const {send, getRawResponse, getRawParsed} = require('./lib/request.js')
 
 
 /**
@@ -76,5 +76,23 @@ function getResponse(url, method, json, params, callback)
 	getRawResponse(url, method, json, params, callback);
 }
 
-module.exports = {get, post, put, getResponse}
+/**
+ * Get the complete parsed object. Promises only.
+ * Parameters same as above.
+ * Parsed object contains:
+ *	- status: HTTP status code.
+ *	- headers: object with headers.
+ *	- buffer: unparsed output buffer.
+ *	- body: parsed body / JSON object.
+ */
+function getParsed(url, method, json, params) {
+	return new Promise((resolve, reject) => {
+		const parsed = getRawParsed(url, method, json, params, error => {
+			if (error) return reject(error)
+			return resolve(parsed)
+		})
+	})
+}
+
+module.exports = {get, post, put, getResponse, getParsed}
 

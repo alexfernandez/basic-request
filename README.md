@@ -152,6 +152,16 @@ instead of the default agent.
 If `params.buffer` is truthy, then a raw buffer is returned
 instead of converting to string first.
 
+### Parse JSON
+
+When the server response has content-type `application/json`
+then it will be parsed and returned as an object instead of a string:
+
+``` js
+const result = await request.get('http://httpbin.org/json')
+console.log(`Type ${typeof result}`) //-> 'object'
+```
+
 ## `getResponse()`
 
 In case you want to get the response stream and parse it yourself,
@@ -172,14 +182,30 @@ request.getResponse('http://httpbin.org/post', POST, {a: 5}, function(error, res
 });
 ```
 
-### Parse JSON
+## `getParsed()`
 
-When the server response has content-type `application/json`
-then it will be parsed and returned as an object instead of a string:
+When want to need to have more visibility into the response
+you can use `getParsed()` (since 3.0.0):
+
+    const parsed = await request.getParsed(url, method, body, params);
+
+Parameters are the same as in `request.getResponse()`,
+except that it does not accept a callback:
+it is always promise-based.
+
+The returned parsed object will have the following attributes:
+
+- `status`: HTTP status code.
+- `headers`: object with headers.
+- `buffer`: unparsed output buffer.
+- `body`: parsed body / JSON object.
+
+Example:
 
 ``` js
-const result = await request.get('http://httpbin.org/json')
-console.log(`Type ${typeof result}`) //-> 'object'
+const parsed = await request.getParsed('http://httpbin.org/post', POST, {a: 5})
+console.log(`Status ${parsed.status}, type ${parsed.headers['content-type']})
+console.log(`body: ${parsed.body}`)
 ```
 
 ## License

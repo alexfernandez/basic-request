@@ -54,6 +54,15 @@ async function testAsyncGetJson()
 	testing.equals(typeof result, 'object', 'Invalid type for JSON result')
 }
 
+async function testAsyncGetParsed()
+{
+	const parsed = await request.getParsed('http://httpbin.org/', 'get', {send: 'whatever'})
+	testing.equals(typeof parsed, 'object', 'Invalid parsed result')
+	testing.equals(parsed.status, 200)
+	testing.assert(parsed.body, 'Missing body')
+	testing.assert(parsed.headers, 'Missing headers')
+}
+
 async function testAsyncError()
 {
 	try
@@ -140,6 +149,7 @@ exports.test = function(callback)
 		testGetRetries,
 		testAsyncGet,
 		testAsyncGetJson,
+		testAsyncGetParsed,
 		testAsyncError,
 		testPost,
 		testAsyncPost,
