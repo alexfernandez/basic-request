@@ -10,7 +10,7 @@ const {send, getRawResponse} = require('./lib/request.js')
  *		- timeout: time to wait for response in ms.
  *		- headers: object with headers.
  *		- agent: for repeated requests, see https://nodejs.org/api/http.html#http_class_http_agent.
- *		- buffer: if true, return raw buffer
+ *		- buffer: if true, return raw buffer.
  *	- callback(error, body): error is null only if result is 200.
  *		If there is an error, the body can contain the following attributes:
  *		- statusCode: if status code is not 200.
