@@ -1,4 +1,4 @@
-const {send, getRawResponse} = require('lib/request.js')
+const {send, getRawResponse} = require('./lib/request.js')
 
 
 /**
