@@ -1,6 +1,6 @@
 {
 	"name": "basic-request",
-	"version": "3.0.2",
+	"version": "3.0.3",
 	"description": "Basic request to a URL, send to a function(error, body), following redirects",
 	"homepage": "https://github.com/alexfernandez/basic-request",
 	"contributors": [
