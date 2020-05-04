@@ -98,8 +98,14 @@ async function testAsyncPost()
 	const json = {scopes: ['public_repo']};
 	const result1 = await request.post('https://httpbin.org/post', json)
 	testing.assert(result1, 'Should have returned something');
+	testing.assert(result1.json, 'Should have original JSON');
 	const result2 = await request.post('https://httpbin.org/post', json, {timeout: 1000})
 	testing.assert(result2, 'Should have returned something with params');
+	testing.assert(result2.json, 'Should have returned original JSON with params');
+	const accented = {scopes: 'pèré'};
+	const result3 = await request.post('https://httpbin.org/post', accented)
+	testing.assert(result3, 'Should have returned something');
+	testing.assert(result3.json, 'Should have original JSON with accents');
 }
 
 function testRedirectToPost(callback)
